@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.1 — 2026-10-08
+
+- Rename the displayed mod title to **Save Before End Turn**.
+- Update the Workshop cover and add a real in-game screenshot of the `BeforeEndTurn` local save.
+- Keep the mod ID, save filename and runtime behavior unchanged.
+
+The screenshot shows an existing save in the native load menu; a save/load round trip for this release is still unverified.
+
 ## 1.0.0 — 2026-10-08
 
 First public preview release.

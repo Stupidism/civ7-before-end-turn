@@ -1,6 +1,6 @@
-# 过回合前存档 · Before End Turn
+# Save Before End Turn（过回合前存档）
 
-版本：1.0.0（首次公开预览版）。面向 Windows《文明 VII》单人游戏。
+版本：1.0.1（公开预览版）。面向 Windows《文明 VII》单人游戏。
 
 [Steam 创意工坊订阅](https://steamcommunity.com/sharedfiles/filedetails/?id=3815596737) · [GitHub 源码](https://github.com/Stupidism/civ7-before-end-turn) · [版本下载](https://github.com/Stupidism/civ7-before-end-turn/releases)
 
@@ -11,7 +11,7 @@
 ## 使用
 
 1. 完全退出游戏后重新启动。
-2. 在主菜单的模组管理中确认 **过回合前存档 · Before End Turn** 已启用。
+2. 在主菜单的模组管理中确认 **Save Before End Turn** 已启用。
 3. 载入已有单人存档，正常操作并点击“下一回合”。存档过程中会短暂显示“正在保存过回合前的进度…”。
 4. 需要反悔时，打开 **载入游戏 → 本地存档**，选择 **BeforeEndTurn**。这是普通本地存档列表中的固定条目。
 
@@ -20,6 +20,10 @@
 这个模组维护 **一个固定存档槽**：每次覆盖同一个 `BeforeEndTurn`，文件名不附加回合、时代或日期。同一台电脑上的不同单人对局也共用这一槽位；需要长久保留某个节点时，请另存一个手动档。
 
 官方自动存档继续遵循你原来的设置。模组的固定槽独立于快速存档，因此 F5 快存和快速载入仍对应官方快速存档，而不是 `BeforeEndTurn`。
+
+![真实游戏载入界面，选中 BeforeEndTurn 本地存档](docs/before-end-turn-save.jpg)
+
+上图为本机实际“载入游戏 → 本地”界面，选中了已有的 `BeforeEndTurn` 存档。截图展示存档位置，不代表已完成当前版本的存档/读档全流程验证。
 
 ## 安装与卸载
 

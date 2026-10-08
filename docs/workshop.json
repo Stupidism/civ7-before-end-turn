@@ -1,6 +1,6 @@
 {
   "modId": "civ7-before-end-turn",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publishedFileId": "3815596737",
   "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3815596737",
   "visibility": "public",
@@ -9,7 +9,7 @@
     "Mod"
   ],
   "publicPageVerified": true,
-  "release": "https://github.com/Stupidism/civ7-before-end-turn/releases/tag/v1.0.0",
+  "release": "https://github.com/Stupidism/civ7-before-end-turn/releases/tag/v1.0.1",
   "validation": {
     "gameVersion": "1.5.0.44",
     "automatedTestsPassed": 31,
@@ -19,12 +19,8 @@
   },
   "uploadedFiles": [
     {
-      "path": "README.md",
-      "sha256": "2da49fae8cbae55a7bd9a1698b39f63687df32089c4ce61d38863029f8bc58b3"
-    },
-    {
       "path": "before-end-turn.modinfo",
-      "sha256": "9c00f2a098d1ed7aac7554d3159ea9f0a8c440c0529fb44d3a49b13fd24e83bd"
+      "sha256": "280eca70ccef94f5c47851ad6d4a48eaf07a944f001ab95f956e68ef5dc92378"
     },
     {
       "path": "ui/before-end-turn.js",
@@ -33,6 +29,16 @@
     {
       "path": "ui/save-gate.js",
       "sha256": "e771a0ecdfc2f4af256d325bfdaeccfc9aa5590eb8b2f682391038729d0ee3dc"
+    }
+  ],
+  "title": "Save Before End Turn",
+  "publicApiMetadataVerified": true,
+  "screenshots": [
+    {
+      "path": "docs/before-end-turn-save.jpg",
+      "source": "Unmodified native game screenshot of the existing BeforeEndTurn save in the local load menu",
+      "sha256": "c516a06c875f13fc3853f75ffb88a49d29ce21c13eb33c77cd83bd065b098d6d",
+      "steamUrl": "https://images.steamusercontent.com/ugc/15615035971547493083/475D5088A6D7A546174BF6589D16A4ACA7A376CF/"
     }
   ]
 }

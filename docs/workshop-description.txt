@@ -1,4 +1,4 @@
-[h1]过回合前存档 · Before End Turn[/h1]
+[h1]Save Before End Turn · 过回合前存档[/h1]
 每次结束回合前，自动覆盖一个固定存档：BeforeEndTurn。
 
 你已经安排好生产、移动好单位，按下“下一回合”后，却遇到 AI 抢奇观、宣战等意外？载入 BeforeEndTurn，即可回到刚才过回合之前，保留这一回合已经完成的操作。
@@ -23,9 +23,10 @@
 时代已经结束且游戏禁止普通存档时，保留最近的有效备份并继续时代转换。绕过标准结束回合入口的其他模组需要单独检查兼容性。
 
 [h2]版本与验证[/h2]
-v1.0.0 首次公开预览版。面向 Windows / Steam Civilization VII 1.5.0.44。
+v1.0.1 公开预览版。面向 Windows / Steam Civilization VII 1.5.0.44。
 31 项自动化检查通过，日志已确认模组在游戏内初始化；实际存档写入与重新载入尚未完成实机验证。首次使用时请先用一个测试回合检查 BeforeEndTurn 的保存内容。
 封面是原创功能说明图，不是实机截图。
+图库中的载入界面为真实游戏截图，展示已有的 BeforeEndTurn 本地存档。
 
 [h2]English[/h2]
 Automatically overwrite one local save, BeforeEndTurn, immediately before ending your turn. The mod waits for save completion before allowing the turn to advance. Load it from Load Game → Local to return to the end of your previous turn, with that turn's actions already performed.
