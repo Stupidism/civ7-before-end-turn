@@ -2,7 +2,7 @@
 
 版本：1.0.0（首次公开预览版）。面向 Windows《文明 VII》单人游戏。
 
-[GitHub 源码](https://github.com/Stupidism/civ7-before-end-turn) · [版本下载](https://github.com/Stupidism/civ7-before-end-turn/releases)
+[Steam 创意工坊订阅](https://steamcommunity.com/sharedfiles/filedetails/?id=3815596737) · [GitHub 源码](https://github.com/Stupidism/civ7-before-end-turn) · [版本下载](https://github.com/Stupidism/civ7-before-end-turn/releases)
 
 ![功能说明封面，非实机截图](docs/workshop-preview.png)
 

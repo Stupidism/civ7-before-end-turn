@@ -1,0 +1,38 @@
+{
+  "modId": "civ7-before-end-turn",
+  "version": "1.0.0",
+  "publishedFileId": "3815596737",
+  "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3815596737",
+  "visibility": "public",
+  "tags": [
+    "UI",
+    "Mod"
+  ],
+  "publicPageVerified": true,
+  "release": "https://github.com/Stupidism/civ7-before-end-turn/releases/tag/v1.0.0",
+  "validation": {
+    "gameVersion": "1.5.0.44",
+    "automatedTestsPassed": 31,
+    "automatedTestsSkipped": 0,
+    "nativeInitializationObserved": true,
+    "nativeSaveLoadRoundTripVerified": false
+  },
+  "uploadedFiles": [
+    {
+      "path": "README.md",
+      "sha256": "2da49fae8cbae55a7bd9a1698b39f63687df32089c4ce61d38863029f8bc58b3"
+    },
+    {
+      "path": "before-end-turn.modinfo",
+      "sha256": "9c00f2a098d1ed7aac7554d3159ea9f0a8c440c0529fb44d3a49b13fd24e83bd"
+    },
+    {
+      "path": "ui/before-end-turn.js",
+      "sha256": "680cd25fc38ef15ec14a2c9df649ef11fa187aad082b8b34a8e8b5a3b287dda2"
+    },
+    {
+      "path": "ui/save-gate.js",
+      "sha256": "e771a0ecdfc2f4af256d325bfdaeccfc9aa5590eb8b2f682391038729d0ee3dc"
+    }
+  ]
+}
