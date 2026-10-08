@@ -1,0 +1,8 @@
+node_modules/
+work/
+dist/
+*.log
+.env
+.env.*
+*.Civ7Save
+*.Civ7Save.*

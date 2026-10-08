@@ -1,0 +1,34 @@
+[h1]过回合前存档 · Before End Turn[/h1]
+每次结束回合前，自动覆盖一个固定存档：BeforeEndTurn。
+
+你已经安排好生产、移动好单位，按下“下一回合”后，却遇到 AI 抢奇观、宣战等意外？载入 BeforeEndTurn，即可回到刚才过回合之前，保留这一回合已经完成的操作。
+
+[h2]功能[/h2]
+[list]
+[*]只有一个固定存档槽，每回合覆盖；不同单人对局也共用此槽。
+[*]保存成功后才推进回合，存档期间会短暂锁定操作。
+[*]存档失败或超时会留在当前回合，可重试。
+[*]支持标准下一回合按钮、快捷键、手柄下一操作和自动结束回合。
+[*]官方快速存档与自动存档继续按原设置工作。
+[/list]
+
+[h2]如何读档[/h2]
+打开“载入游戏 → 本地存档”，选择 BeforeEndTurn。它位于普通本地存档列表；官方快速载入快捷键仍载入官方快速存档。
+
+[h2]安装与兼容[/h2]
+订阅后重启游戏，在模组列表确认启用。可以用于已有单人对局。
+如果安装过手动版，请先退出游戏，把 Mods/civ7-before-end-turn 移到 Mods 目录之外，避免手动版和工坊版同时加载。
+仅限单人游戏；多人、热座和 Autoplay 不执行本模组的保存逻辑。
+与 Rest Guard 的标准加载顺序配合时，先休息，再保存，再结束回合。
+时代已经结束且游戏禁止普通存档时，保留最近的有效备份并继续时代转换。绕过标准结束回合入口的其他模组需要单独检查兼容性。
+
+[h2]版本与验证[/h2]
+v1.0.0 首次公开预览版。面向 Windows / Steam Civilization VII 1.5.0.44。
+31 项自动化检查通过，日志已确认模组在游戏内初始化；实际存档写入与重新载入尚未完成实机验证。首次使用时请先用一个测试回合检查 BeforeEndTurn 的保存内容。
+封面是原创功能说明图，不是实机截图。
+
+[h2]English[/h2]
+Automatically overwrite one local save, BeforeEndTurn, immediately before ending your turn. The mod waits for save completion before allowing the turn to advance. Load it from Load Game → Local to return to the end of your previous turn, with that turn's actions already performed.
+Single-player only. All single-player campaigns share this one slot. Normal autosaves and quicksaves retain their existing behavior. This is an initial public preview: automated checks pass; an in-game save/load round trip is not yet verified.
+
+[url=https://github.com/Stupidism/civ7-before-end-turn]GitHub source and releases[/url]

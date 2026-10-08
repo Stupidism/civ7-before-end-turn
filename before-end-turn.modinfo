@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="civ7-before-end-turn" version="1" xmlns="ModInfo">
+  <Properties>
+    <Name>过回合前存档 · Before End Turn</Name>
+    <Description>单人游戏在过回合前自动覆盖 BeforeEndTurn 存档，保存成功后再推进回合。保留本回合操作，不占用快速存档槽。</Description>
+    <Authors>Stupidism</Authors>
+    <Version>1.0.0</Version>
+    <Package>Mod</Package>
+    <AffectsSavedGames>0</AffectsSavedGames>
+    <ShowInBrowser>1</ShowInBrowser>
+    <EnabledByDefault>1</EnabledByDefault>
+  </Properties>
+  <Dependencies><Mod id="base-standard" title="LOC_MODULE_BASE_STANDARD_NAME" /></Dependencies>
+  <ActionCriteria><Criteria id="always"><AlwaysMet /></Criteria></ActionCriteria>
+  <ActionGroups>
+    <ActionGroup id="before-end-turn-game" scope="game" criteria="always">
+      <!-- Before Rest Guard (2000), so its outer wrapper finishes the rest first. -->
+      <Properties><LoadOrder>1500</LoadOrder></Properties>
+      <Actions>
+        <UIScripts><Item>ui/before-end-turn.js</Item></UIScripts>
+        <ImportFiles><Item>ui/save-gate.js</Item></ImportFiles>
+      </Actions>
+    </ActionGroup>
+  </ActionGroups>
+</Mod>
