@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Mod id="civ7-before-end-turn" version="2" xmlns="ModInfo">
+<Mod id="civ7-before-end-turn" version="3" xmlns="ModInfo">
   <Properties>
     <Name>Save Before End Turn</Name>
     <Description>单人游戏在过回合前自动覆盖 BeforeEndTurn 存档，保存成功后再推进回合。保留本回合操作，不占用快速存档槽。</Description>
     <Authors>Stupidism</Authors>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <Package>Mod</Package>
     <AffectsSavedGames>0</AffectsSavedGames>
     <ShowInBrowser>1</ShowInBrowser>

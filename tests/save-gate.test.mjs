@@ -105,6 +105,90 @@ test('late completion after timeout cannot release a new request', () => {
   assert.equal(h.calls.filter(x => x === 'turn').length, 1);
 });
 
+test('a missing native completion recovers with a fresh confirmed write', () => {
+  const h = harness(); h.request();
+  // Captured in game: StartSaveRequest, file written, no SaveComplete delivered.
+  h.flush(5000);
+  assert.equal(h.calls.filter(x => x === 'save').length, 2);
+  assert.equal(h.calls.includes('turn'), false);
+  h.complete(); h.flush();
+  assert.equal(h.gate.inFlight, 0);
+  assert.equal(h.calls.filter(x => x === 'turn').length, 1);
+});
+
+test('recovery rejected by an active native write keeps waiting for its completion', () => {
+  const h = harness(); h.request();
+  h.env.save = () => { h.calls.push('save-busy'); return false; };
+  h.flush(5000);
+  assert.ok(h.calls.includes('save-busy'));
+  assert.equal(h.calls.includes('error'), false);
+  assert.equal(h.gate.inFlight, 1);
+  h.complete(); h.flush();
+  assert.equal(h.calls.filter(x => x === 'turn').length, 1);
+});
+
+test('late completion before recovery starts cannot confirm the fresh write', () => {
+  const h = harness(); h.request();
+  h.env.save = () => { h.calls.push('save'); return true; };
+  h.flush(5000);
+  h.complete(); h.flush();
+  assert.equal(h.calls.includes('turn'), false);
+  h.gate.onSaveStart(); h.complete(); h.flush();
+  assert.equal(h.calls.filter(x => x === 'turn').length, 1);
+});
+
+test('retry also recovers a stale outstanding count left by an earlier timeout', () => {
+  const h = harness(); h.request(); h.flush(60000); h.retry();
+  h.flush(5000);
+  assert.equal(h.calls.filter(x => x === 'save').length, 2);
+  h.complete(); h.flush();
+  assert.equal(h.calls.filter(x => x === 'turn').length, 1);
+});
+
+test('recovery is bounded and never advances without a successful completion', () => {
+  const h = harness(); h.request(); h.flush(5000); h.flush(5000);
+  assert.equal(h.calls.filter(x => x === 'save').length, 2);
+  h.flush(60000);
+  assert.equal(h.calls.includes('turn'), false);
+  assert.equal(h.calls.filter(x => x === 'error').length, 1);
+});
+
+test('recovery preserves synchronous completion when the native request is rejected', () => {
+  const h = harness(); h.request();
+  h.env.save = () => { h.complete(); return false; };
+  h.flush(5000); h.flush();
+  assert.equal(h.calls.filter(x => x === 'turn').length, 1);
+  assert.equal(h.calls.includes('error'), false);
+});
+
+test('recovery handles synchronous start and completion after native acceptance', () => {
+  const h = harness(); h.request();
+  h.env.save = () => { h.gate.onSaveStart(); h.complete(); return true; };
+  h.flush(5000); h.flush();
+  assert.equal(h.calls.filter(x => x === 'turn').length, 1);
+  assert.equal(h.gate.inFlight, 0);
+});
+
+test('a context change cancels recovery before issuing another write', () => {
+  const h = harness(); h.request(); h.setContext({ token: 'another-game' });
+  h.flush(5000);
+  assert.equal(h.calls.filter(x => x === 'save').length, 1);
+  assert.equal(h.calls.includes('turn'), false);
+  assert.equal(h.gate.busy, false);
+});
+
+test('unloading cancels the recovery timer', () => {
+  const h = harness(); h.request(); h.gate.dispose(); h.flush(5000);
+  assert.equal(h.calls.filter(x => x === 'save').length, 1);
+  assert.equal(h.calls.includes('turn'), false);
+});
+
+test('a failed recovery write still cannot advance the turn', () => {
+  const h = harness(); h.request(); h.flush(5000); h.complete('disk-full'); h.flush();
+  assert.equal(h.calls.includes('turn'), false);
+  assert.equal(h.calls.filter(x => x === 'error').length, 1);
+});
+
 test('explicit retry after a failed save writes again before submitting', () => {
   const h = harness(); h.request(); h.complete('full');
   h.retry(); h.complete(); h.flush();

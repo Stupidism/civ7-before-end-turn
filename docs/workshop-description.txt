@@ -23,13 +23,14 @@
 时代已经结束且游戏禁止普通存档时，保留最近的有效备份并继续时代转换。绕过标准结束回合入口的其他模组需要单独检查兼容性。
 
 [h2]版本与验证[/h2]
-v1.0.1 公开预览版。面向 Windows / Steam Civilization VII 1.5.0.44。
-31 项自动化检查通过，日志已确认模组在游戏内初始化；实际存档写入与重新载入尚未完成实机验证。首次使用时请先用一个测试回合检查 BeforeEndTurn 的保存内容。
+v1.0.2 公开预览版。面向 Windows / Steam Civilization VII 1.5.0.44。
+修复保存完成通知缺失后反复重试仍卡住的问题：等待 5 秒后尝试一次重新覆盖，收到新的开始及成功通知后才过回合。
+42 项自动化检查通过。已实机验证连续覆盖、正常过回合，以及模拟丢失完成通知后的恢复。首次通知为什么偶尔缺失尚未确定；完整存档/读档内容核对仍需继续验证。
 封面是原创功能说明图，不是实机截图。
 图库中的载入界面为真实游戏截图，展示已有的 BeforeEndTurn 本地存档。
 
 [h2]English[/h2]
 Automatically overwrite one local save, BeforeEndTurn, immediately before ending your turn. The mod waits for save completion before allowing the turn to advance. Load it from Load Game → Local to return to the end of your previous turn, with that turn's actions already performed.
-Single-player only. All single-player campaigns share this one slot. Normal autosaves and quicksaves retain their existing behavior. This is an initial public preview: automated checks pass; an in-game save/load round trip is not yet verified.
+Single-player only. All single-player campaigns share this one slot. Normal autosaves and quicksaves retain their existing behavior. v1.0.2 recovers from a missing save-completion notification with one fresh overwrite after five seconds, still requiring successful completion. Native recovery was verified in game; a full save/load content comparison remains unverified.
 
 [url=https://github.com/Stupidism/civ7-before-end-turn]GitHub source and releases[/url]

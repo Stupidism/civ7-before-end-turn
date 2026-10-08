@@ -88,6 +88,7 @@ function install() {
       return true;
     },
     saved: state => console.warn(`${PREFIX} Saved ${FILE_NAME} at turn ${state.turn}; submitting end turn.`),
+    recovering: state => console.warn(`${PREFIX} Save completion missing at turn ${state.turn}; native serializer accepted one recovery write. Waiting for fresh completion.`),
     error: (message, retry) => {
       console.error(`${PREFIX} ${message}`);
       errorOpen = true;

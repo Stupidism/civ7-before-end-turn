@@ -1,6 +1,6 @@
 {
   "modId": "civ7-before-end-turn",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publishedFileId": "3815596737",
   "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3815596737",
   "visibility": "public",
@@ -9,26 +9,28 @@
     "Mod"
   ],
   "publicPageVerified": true,
-  "release": "https://github.com/Stupidism/civ7-before-end-turn/releases/tag/v1.0.1",
+  "release": "https://github.com/Stupidism/civ7-before-end-turn/releases/tag/v1.0.2",
   "validation": {
     "gameVersion": "1.5.0.44",
-    "automatedTestsPassed": 31,
+    "automatedTestsPassed": 42,
     "automatedTestsSkipped": 0,
     "nativeInitializationObserved": true,
-    "nativeSaveLoadRoundTripVerified": false
+    "nativeSaveLoadRoundTripVerified": false,
+    "nativeSaveOverwriteVerified": true,
+    "nativeMissingCompletionRecoveryVerified": true
   },
   "uploadedFiles": [
     {
       "path": "before-end-turn.modinfo",
-      "sha256": "280eca70ccef94f5c47851ad6d4a48eaf07a944f001ab95f956e68ef5dc92378"
+      "sha256": "6f8848856ee9f9da08b76a04cd96f660588dc621236b38bed0f48198a1e515e3"
     },
     {
       "path": "ui/before-end-turn.js",
-      "sha256": "680cd25fc38ef15ec14a2c9df649ef11fa187aad082b8b34a8e8b5a3b287dda2"
+      "sha256": "23342983848e14d2e7f9fc279e02baa1388bce46f462f1414216ffae38ebb14d"
     },
     {
       "path": "ui/save-gate.js",
-      "sha256": "e771a0ecdfc2f4af256d325bfdaeccfc9aa5590eb8b2f682391038729d0ee3dc"
+      "sha256": "81d95f65f45a6ba9bce8b188349be8933f808aa4a54e3cf89fb2fefbcb0046c1"
     }
   ],
   "title": "Save Before End Turn",

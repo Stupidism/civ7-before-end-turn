@@ -6,6 +6,7 @@ export class SaveGate {
     this.inFlight = 0;
     this.failedToken = null;
     this.disposed = false;
+    this.recoveryEvents = null;
   }
 
   get busy() { return this.job !== null; }
@@ -21,10 +22,12 @@ export class SaveGate {
     }
     if (this.failedToken === context.token && !manual) return;
     this.failedToken = null;
-    const job = { context, submit, phase: 'waiting', timer: null, deferred: null };
+    const job = { context, submit, phase: 'waiting', timer: null, deferred: null,
+      recoveryTimer: null, requireStart: false };
     this.job = job;
     this.env.showBusy(true);
     this.armTimeout(job);
+    job.recoveryTimer = this.env.setTimer(() => this.recover(job), 5000);
     if (this.inFlight === 0) this.start(job);
   }
 
@@ -37,7 +40,7 @@ export class SaveGate {
     this.env.clearTimer(job.timer);
     job.timer = this.env.setTimer(() => {
       if (this.job !== job) return;
-      this.fail('等待存档完成超时（60 秒）。本回合尚未结束；请检查磁盘空间，或手动存档后重新载入。');
+      this.fail('等待存档完成超时（60 秒）。本回合尚未结束；可以重试存档，或留在本回合。');
     }, 60000);
   }
 
@@ -56,9 +59,35 @@ export class SaveGate {
     }
   }
 
+  recover(job) {
+    job.recoveryTimer = null;
+    if (this.job !== job || job.phase === 'saved') return;
+    if (!this.isCurrent(job)) return this.cancel();
+    if (this.inFlight === 0) return;
+    // Native writes can finish without a delivered SaveComplete. The native
+    // serializer rejects another request while busy; an accepted fresh write
+    // lets us discard stale event counts, but is never itself proof of success.
+    const events = this.recoveryEvents = [];
+    let accepted = false;
+    try { accepted = this.env.save(); }
+    catch { /* Keep waiting for the original request, within the same timeout. */ }
+    this.recoveryEvents = null;
+    if (accepted && this.job === job) {
+      this.inFlight = 0;
+      job.phase = 'saving';
+      job.requireStart = true;
+      this.env.recovering?.(job.context);
+    }
+    // Preserve synchronous native callbacks too. On rejection they still belong
+    // to the original write. On acceptance require the fresh StartSaveRequest.
+    for (const [method, result] of events) this[method](result);
+  }
+
   onSaveStart() {
     if (this.disposed) return;
+    if (this.recoveryEvents) return void this.recoveryEvents.push(['onSaveStart']);
     this.inFlight++;
+    if (this.job?.phase === 'saving') this.job.requireStart = false;
     // SaveComplete has no guaranteed per-request ID. Never guess when two writes overlap.
     if (this.job?.phase === 'saving' && this.inFlight > 1) {
       this.fail('检测到同时进行的其他存档。为确保备份正确，已取消本次过回合，请等存档结束后再试。');
@@ -66,6 +95,7 @@ export class SaveGate {
   }
 
   onSaveComplete(result) {
+    if (this.recoveryEvents) return void this.recoveryEvents.push(['onSaveComplete', result]);
     if (this.disposed || this.env.isPending(result)) return;
     this.inFlight = Math.max(0, this.inFlight - 1);
     const job = this.job;
@@ -80,7 +110,7 @@ export class SaveGate {
       }
       return;
     }
-    if (job.phase !== 'saving' || !this.env.matches(result)) return;
+    if (job.phase !== 'saving' || job.requireStart || !this.env.matches(result)) return;
     if (!this.env.succeeded(result)) {
       this.fail(`存档失败（错误码 ${String(result?.result)}）。本回合尚未结束。`);
       return;
@@ -114,6 +144,7 @@ export class SaveGate {
     if (!job) return;
     this.env.clearTimer(job.timer);
     this.env.clearTimer(job.deferred);
+    this.env.clearTimer(job.recoveryTimer);
     this.env.showBusy(false);
   }
 

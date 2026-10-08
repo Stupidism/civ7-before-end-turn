@@ -50,10 +50,10 @@ function harness() {
       sendTurnComplete: () => { sent = true; calls.push(['turn']); } },
     Game: { age: 0, turn: 4, AgeProgressManager: { isAgeOver: false } },
     Players: { isValid: () => true, get: () => player }, Autoplay: { isActive: false },
-    GameStateStorage: { getGameConfigurationSaveType: () => 2 },
+    GameStateStorage: { getGameConfigurationSaveType: () => 1 },
     SaveLocations: { LOCAL_STORAGE: 1 },
-    SaveLocationCategories: { NORMAL: 64, AUTOSAVE: 8, QUICKSAVE: 16 },
-    SaveFileTypes: { GAME_STATE: 1 },
+    SaveLocationCategories: { NORMAL: 1, AUTOSAVE: 4, QUICKSAVE: 2 },
+    SaveFileTypes: { GAME_STATE: 0 },
     SerializerResult: { RESULT_OK: 0, RESULT_PENDING: 1 },
     ContextManager: { canSaveGame: () => true, handleInput: () => 'input', handleNavigation: () => 'nav' },
     DialogBoxManager: { createDialog_MultiOption: params => { calls.push(['dialog', params]); return 99; }, closeDialogBox() {} },
@@ -70,8 +70,8 @@ function harness() {
   panel.setEndTurnWaiting = () => calls.push(['waiting']);
   return {
     context, panel, config, calls, emit,
-    complete: () => emit('SaveComplete', { options: 64, result: 0 }),
-    flush() { for (const [id, timer] of [...timers]) if (timer.ms === 0) { timers.delete(id); timer.fn(); } },
+    complete: () => emit('SaveComplete', { options: 65, result: 0 }),
+    flush(ms = 0) { for (const [id, timer] of [...timers]) if (timer.ms === ms) { timers.delete(id); timer.fn(); } },
     nextTurn() { sent = false; context.Game.turn++; },
     advanceTime(ms) { now += ms; },
     evaluate: source => vm.runInContext(`(function () { ${source}\n})();`, context),
@@ -96,7 +96,7 @@ test('adapter uses the same normal local overwrite slot on consecutive turns', {
   h.panel.onActionButton(); h.complete(); h.flush(); h.nextTurn();
   h.panel.onActionButton(); h.complete(); h.flush();
   const saves = h.calls.filter(x => x[0] === 'save').map(x => JSON.parse(JSON.stringify(x[1])));
-  const expected = { Location: 1, LocationCategories: 64, Type: 2, ContentType: 1, FileName: 'BeforeEndTurn', Overwrite: true };
+  const expected = { Location: 1, LocationCategories: 1, Type: 1, ContentType: 0, FileName: 'BeforeEndTurn', Overwrite: true };
   assert.deepEqual(saves, [expected, expected]);
   h.dispose();
 });
@@ -115,9 +115,9 @@ test('adapter blocks engine input while saving and restores it afterwards', { sk
 
 test('adapter rejects autosave completion and exposes a failed write without advancing', { skip }, () => {
   const h = harness(); h.panel.onActionButton();
-  h.emit('SaveComplete', { options: 8, result: 0 }); h.flush();
+  h.emit('SaveComplete', { options: 4, result: 0 }); h.flush();
   assert.equal(h.calls.some(x => x[0] === 'turn'), false);
-  h.emit('SaveComplete', { options: 64, result: 42 }); h.flush();
+  h.emit('SaveComplete', { options: 65, result: 42 }); h.flush();
   assert.equal(h.calls.some(x => x[0] === 'turn'), false);
   assert.equal(h.calls.filter(x => x[0] === 'dialog').length, 1);
   const dialog = h.calls.find(x => x[0] === 'dialog')[1];
@@ -139,6 +139,18 @@ test('multiplayer bypasses the mod without creating a save', { skip }, () => {
   h.dispose();
 });
 
+test('captured missing completion: fresh overwrite finishes before actual turn submission', { skip }, () => {
+  const h = harness(); h.panel.onActionButton();
+  // Native StartSaveRequest happened and the file was written, but the completion
+  // was missing. Replay that observed boundary through the actual adapter.
+  h.flush(5000);
+  assert.equal(h.calls.filter(x => x[0] === 'save').length, 2);
+  assert.equal(h.calls.some(x => x[0] === 'turn'), false);
+  h.emit('SaveComplete', { result: 0, type: 1, options: 65, fileType: 0 }); h.flush();
+  assert.equal(h.calls.filter(x => x[0] === 'turn').length, 1);
+  h.dispose();
+});
+
 test('installed Rest Guard completes its rest before saving, with no second rest at native submit', {
   skip: skip || !existsSync(join(restRoot, 'ui/rest-guard.js'))
 }, () => {
@@ -156,6 +168,12 @@ test('installed Rest Guard completes its rest before saving, with no second rest
     h.context.Game.turn = 5;
   }
   h.context.RestStore = h.evaluate(`${read('rest-store.js')}\nreturn RestStore;`);
+  // Current Rest Guard shares its store with the settings UI. The settings UI
+  // itself is outside this test; exercise the real controller and store.
+  h.context.settingsStore = new h.context.RestStore();
+  h.context.subscribeSettings = () => () => {};
+  h.context.isSettingsOpen = () => false;
+  h.context.openSettings = () => {};
   h.context.RestView = class {
     constructor(callbacks) { this.callbacks = callbacks; this.root = { style: {} }; }
     close() { this.mode = null; } showRest() { this.mode = 'rest'; }
